@@ -4,9 +4,11 @@ const app = express();
 const fs = require('fs');
 const { parse } = require("path/posix");
 const bcrypt = require('bcrypt')
+const cors = require('cors')
 
 const sessionStorage = {}
 
+app.use(cors())
 app.use(express.json())
 
 app.get("/api/hello",(req,res)=>{
@@ -44,10 +46,13 @@ app.post("/api/login", async (req,res)=>{
     }
 })
 
-app.post('/api/secret', (req,res)=>{
+app.get('/api/secret', (req,res)=>{
     const sessionId = req.header('sessionId')
+    console.log(sessionId)
+    console.log(sessionStorage)
     if(!sessionStorage[sessionId]){
         return res.sendStatus(401)
+        
     }
 
     res.send(`hello ${sessionStorage[sessionId]} this is a secret`)
